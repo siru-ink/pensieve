@@ -1,0 +1,12 @@
+[Unit]
+Description=Guestbook Receiver Server
+After=network.target
+
+[Service]
+Type=simple
+User=guestbook
+Group=guestbook
+WorkingDirectory=/www/guestbook
+ExecStart=/www/guestbook/guestbook
+Restart=on-failure
+RestartSec=5
