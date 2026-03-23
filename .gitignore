@@ -1,0 +1,2 @@
+# Exclude sqlite3 database being created on test run of server
+guestbook.db
