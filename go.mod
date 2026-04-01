@@ -1,4 +1,4 @@
-module git.siru.ink/siru/guestbook
+module git.siru.ink/siru/commentbook
 
 go 1.26.1
 
