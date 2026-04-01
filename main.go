@@ -63,7 +63,7 @@ func main() {
 		http.Redirect(w, r, r.FormValue("siteurl"), http.StatusSeeOther)
 	})
 
-	http.ListenAndServe(":11000", nil)
+	http.ListenAndServe(":8020", nil)
 }
 
 func addentry(entry CommentEntry) error {
