@@ -1,0 +1,29 @@
+<style>
+.commentbook-labels {
+    font-weight: bold;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+#commentbook-name {
+    font-size: inherit;
+    font-family: inherit;
+    width: min(80%, 25ch);
+}
+
+#commentbook-comment {
+    font-size: inherit;
+    font-family: inherit;
+    width: 100%;
+    min-height: 7em;
+}
+</style>
+
+<form action="https://commentbook.siru.ink/" method="POST" >
+    <label class="commentbook-labels">Name:</label><br />
+    <input type="text" name="name" placeholder="Anonymous" value="Anonymous" required id="commentbook-name" /><br />
+    <label class="commentbook-labels">Comment:</label><br />
+    <textarea name="comment" id="commentbook-comment" required ></textarea><br />
+    <input type="submit" />
+    <input type="hidden" name="siteurl" value="https://www.siru.ink/comments/" />
+</form>
