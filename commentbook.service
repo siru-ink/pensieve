@@ -1,0 +1,12 @@
+[Unit]
+Description=Commentbook Receiver Server
+After=network.target
+
+[Service]
+Type=simple
+User=commentbook
+Group=commentbook
+WorkingDirectory=/commentbook
+ExecStart=/commentbook/commentbook
+Restart=on-failure
+RestartSec=5
