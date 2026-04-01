@@ -4,79 +4,75 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 
 	_ "modernc.org/sqlite"
 )
 
-type GuestbookEntry struct {
+type CommentEntry struct {
 	Name    string
-	Content string
+	Comment string
 	SiteUrl string
 }
 
 var db *sql.DB
 
-func main() {
-	err := initDatabase()
+func init() {
+	// Open a database (internally stores a database pool for concurrent use)
+	var err error
+	db, err = sql.Open("sqlite", "comments.db")
 	if err != nil {
-		return
+		log.Fatalf("Database [comments.db] could not be opened: %v\n", err)
 	}
 
+	// Create the table to store entries
+	_, err = db.ExecContext(
+		context.Background(),
+		"CREATE TABLE IF NOT EXISTS comments (id INTEGER NOT NULL UNIQUE PRIMARY KEY"+
+			"AUTOINCREMENT, name TEXT NOT NULL, comment TEXT NOT NULL, siteurl TEXT NOT NULL);",
+	)
+	if err != nil {
+		log.Fatalln("Database table [comments] could not be created: %w", err)
+	}
+
+	// Log a startup message to indicate db is redaable/editable
+	log.Println("Database connection to [comments.db] was constructed.")
+}
+
+func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			fmt.Fprintf(w, "You have ended up somewhere that only computers are supposed to be. Feel free to close this tab.")
+			w.Header().Set("Allow", "POST")
+			http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 			return
 		}
 
-		// fmt.Fprintf(w, "N: %s, Content: %s, SiteUrl: %s",
-		// 	r.FormValue("name"), r.FormValue("content"), r.FormValue("siteurl"))
-
-		entry := GuestbookEntry{
+		entry := CommentEntry{
 			Name:    r.FormValue("name"),
-			Content: r.FormValue("content"),
+			Comment: r.FormValue("comment"),
 			SiteUrl: r.FormValue("siteurl"),
 		}
 
-		err = addentry(entry)
+		err := addentry(entry)
 		if err != nil {
-			fmt.Println("Something went wrong.")
+			fmt.Fprintf(w, "Something went wrong in saving your comment. Please be so kind to contact me via email at email [at] siru [dot] ink, so that I can try to resolve the problem.")
+			return
 		}
 
 		http.Redirect(w, r, r.FormValue("siteurl"), http.StatusSeeOther)
 	})
 
-	http.ListenAndServe(":8010", nil)
+	http.ListenAndServe(":11000", nil)
 }
 
-func initDatabase() error {
-	var err error
-	db, err = sql.Open("sqlite", "guestbook.db")
-	if err != nil {
-		return err
-	}
-	_, err = db.ExecContext(
-		context.Background(),
-		`create table if not exists 'guestbookentries' (
-			id integer not null unique,
-			name text not null,
-			content text not null,
-			siteurl text not null,
-			primary key('id' autoincrement)
-		);`,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func addentry(entry GuestbookEntry) error {
+func addentry(entry CommentEntry) error {
 	_, err := db.ExecContext(
 		context.Background(),
-		`insert into guestbookentries (name, content, siteurl) VALUES (?,?,?);`, entry.Name, entry.Content, entry.SiteUrl,
+		`INSERT INTO comments (name, comment, siteurl) VALUES (?,?,?);`, entry.Name, entry.Comment, entry.SiteUrl,
 	)
 	if err != nil {
+		log.Printf("Comment could not be added to database [%+v]: %v\n", entry, err)
 		return err
 	}
 	return nil
