@@ -1,2 +1,5 @@
 # Exclude sqlite3 database being created on test run of server
 comments.db
+
+# Exclude compiled go binary
+/pensieve
