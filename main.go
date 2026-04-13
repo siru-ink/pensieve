@@ -33,7 +33,7 @@ func init() {
 			"AUTOINCREMENT, name TEXT NOT NULL, comment TEXT NOT NULL, siteurl TEXT NOT NULL);",
 	)
 	if err != nil {
-		log.Fatalln("Database table [comments] could not be created: %w", err)
+		log.Fatalf("Database table [comments] could not be created: %v\n", err)
 	}
 
 	// Log a startup message to indicate db is redaable/editable
