@@ -30,7 +30,7 @@ func init() {
 	_, err = db.ExecContext(
 		context.Background(),
 		"CREATE TABLE IF NOT EXISTS comments (id INTEGER NOT NULL UNIQUE PRIMARY KEY"+
-			"AUTOINCREMENT, name TEXT NOT NULL, comment TEXT NOT NULL, siteurl TEXT NOT NULL);",
+			" AUTOINCREMENT, name TEXT NOT NULL, comment TEXT NOT NULL, siteurl TEXT NOT NULL);",
 	)
 	if err != nil {
 		log.Fatalf("Database table [comments] could not be created: %v\n", err)
@@ -63,7 +63,7 @@ func main() {
 		http.Redirect(w, r, r.FormValue("siteurl"), http.StatusSeeOther)
 	})
 
-	http.ListenAndServe(":8020", nil)
+	log.Fatalf("Server exited: %v\n", http.ListenAndServe(":8020", nil))
 }
 
 func addentry(entry CommentEntry) error {
