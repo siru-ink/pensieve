@@ -1,5 +1,5 @@
 [Unit]
-Description=Commentbook Receiver Server
+Description=Pensieve Comment Receiver Server
 After=network.target
 Wants=network-online.target
 
