@@ -6,10 +6,10 @@ Wants=network-online.target
 [Service]
 Restart=always
 Type=simple
-User=commentbook
-Group=commentbook
-WorkingDirectory=/commentbook
-ExecStart=/commentbook/commentbook
+User=pensieve
+Group=pensieve
+WorkingDirectory=/pensieve
+ExecStart=/pensieve/pensieve
 RestartSec=5
 Environment=
 
